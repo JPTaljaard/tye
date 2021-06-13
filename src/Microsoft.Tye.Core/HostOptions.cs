@@ -27,5 +27,6 @@ namespace Microsoft.Tye
         public Verbosity LogVerbosity { get; set; } = Verbosity.Debug;
 
         public bool Watch { get; set; }
+        public string? InstanceName { get; set; }
     }
 }

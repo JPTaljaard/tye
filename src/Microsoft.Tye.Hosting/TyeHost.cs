@@ -96,7 +96,7 @@ namespace Microsoft.Tye.Hosting
 
             _logger.LogInformation("Executing application from {Source}", _application.Source);
 
-            _replicaRegistry = new ReplicaRegistry(_application.ContextDirectory, _logger);
+            _replicaRegistry = new ReplicaRegistry(_application.ContextDirectory, _options.InstanceName, _logger);
 
             _processor = CreateApplicationProcessor(_replicaRegistry, _options, _logger);
 

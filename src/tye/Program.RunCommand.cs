@@ -74,6 +74,12 @@ namespace Microsoft.Tye
                     Description = "Watches for code changes for all dotnet projects.",
                     Required = false
                 },
+                new Option("--instance")
+                {
+                    Description = "Used to run multiple named instances of tye from the same directory. This is useful to keep services running that don't need to be restarted often. e.g. Database",
+                    Argument = new Argument<string>("instance"),
+                    Required = false
+                },
                 StandardOptions.Framework,
                 StandardOptions.Tags,
                 StandardOptions.Verbosity,
@@ -105,6 +111,7 @@ namespace Microsoft.Tye
                     Docker = args.Docker,
                     NoBuild = args.NoBuild,
                     Port = args.Port,
+                    InstanceName = args.Instance,
 
                     // parsed later by the diagnostics code
                     DistributedTraceProvider = args.Dtrace,
@@ -175,6 +182,8 @@ namespace Microsoft.Tye
             public string Framework { get; set; } = default!;
 
             public string[] Tags { get; set; } = Array.Empty<string>();
+
+            public string? Instance { get; set; }
         }
     }
 }

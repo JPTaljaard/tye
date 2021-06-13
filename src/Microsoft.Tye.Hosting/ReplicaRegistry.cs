@@ -15,12 +15,14 @@ namespace Microsoft.Tye.Hosting
 {
     public class ReplicaRegistry : IDisposable
     {
+        private readonly string? _instanceName;
         private readonly ILogger _logger;
         private readonly ConcurrentDictionary<string, object> _fileWriteLocks;
         private readonly string _tyeFolderPath;
 
-        public ReplicaRegistry(string directory, ILogger logger)
+        public ReplicaRegistry(string directory, string? instanceName, ILogger logger)
         {
+            _instanceName = instanceName;
             _logger = logger;
             _fileWriteLocks = new ConcurrentDictionary<string, object>();
             _tyeFolderPath = Path.Join(directory, ".tye");
@@ -92,10 +94,11 @@ namespace Microsoft.Tye.Hosting
 
         private object GetLockForStore(string storeName)
         {
-            return _fileWriteLocks.GetOrAdd(storeName, _ => new object());
+            var lockName = string.IsNullOrEmpty(_instanceName) ? storeName : $"{_instanceName}_{storeName}";
+            return _fileWriteLocks.GetOrAdd(lockName, _ => new object());
         }
 
-        private string GetStoreFile(string storeName) => $"{storeName}_store";
+        private string GetStoreFile(string storeName) => string.IsNullOrEmpty(_instanceName) ? $"{storeName}_store" : $"{_instanceName}_{storeName}_store";
 
         public void Dispose()
         {
